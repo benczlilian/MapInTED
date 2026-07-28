@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <title>TED INCRA UFPR</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Corbel&display=swap" rel="stylesheet">
+    
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style-custom.css">
+    <link rel="icon" href="media/ted_0.png">
+
+    <style>
+        #loader {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: #efebd6; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Corbel', sans-serif; font-size: 20px; color: #7AB24F;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader">Carregando...</div>
+
+    <button id="toggle-mode" class="btn-floating">Ver Mapa</button>
+
+    <main id="scrolly-main">
+        <div id="scrolly">
+            <div id="map"></div>
+            <div id="story"></div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.15/leaflet-maplibre-gl.js"></script>
+    <script src="scripts/estilos-geojson.js"></script>
+    <script src="https://unpkg.com/intersection-observer@0.12.0/intersection-observer.js"></script>
+    <script src="https://unpkg.com/scrollama"></script>
+    <script src="https://unpkg.com/georaster"></script>
+    <script src="https://unpkg.com/georaster-layer-for-leaflet"></script>
+    <script src="scripts/google-doc-url.js"></script>
+    <script src="markers/leaflet.extra-markersTED.min.js"></script>
+    <script src="scripts/ted_map.js"></script>
+    <script src="scripts/story-mapTED.js"></script>
+
+
+
+</body>
+</html>
