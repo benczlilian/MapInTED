@@ -70,6 +70,20 @@ function initStoryMap(data) {
 
     extraMarkersGroup = L.layerGroup().addTo(map);
     L.control.zoom({ position: 'topleft' }).addTo(map);
+
+    map.on('zoomend', function() {
+        var zoomAtual = map.getZoom();
+        extraMarkersGroup.eachLayer(function(marker) {
+            if (marker.originalLatLng && marker.offsetLatLng && marker.zoomBase) {
+                if (zoomAtual > marker.zoomBase + 1) {
+                    marker.setLatLng(marker.originalLatLng);
+                } else {
+                    marker.setLatLng(marker.offsetLatLng);
+                }
+            }
+        });
+    });
+
     setTimeout(function(){ map.invalidateSize(); }, 500);
 
     // BOTÕES 
@@ -77,7 +91,7 @@ function initStoryMap(data) {
     controlsDiv.id = 'floating-controls';
     document.body.appendChild(controlsDiv);
 
-    var layerBtn = document.createElement('button');
+    /*var layerBtn = document.createElement('button');
     layerBtn.className = 'btn-floating btn-layer'; 
     layerBtn.innerHTML = 'Layers';
     
@@ -106,7 +120,7 @@ function initStoryMap(data) {
             else if (window.mapLegend) { map.removeControl(window.mapLegend); window.mapLegend = null; }
         }
     };
-    controlsDiv.appendChild(layerBtn);
+    controlsDiv.appendChild(layerBtn);*/
 
     var toggleBtn = document.getElementById('toggle-mode');
     if (toggleBtn) {
@@ -328,17 +342,52 @@ function initStoryMap(data) {
         markers[i] = marker;
 
         var chapterExtras = [];
+        var posicoesOcupadasPx = [];
+        var chapterZoom = zoomLevel; 
+        
+        if (marker) {
+            posicoesOcupadasPx.push(map.project([lat, lon], chapterZoom));
+        }
+
         if (row['Extra Markers'] && row['Extra Markers'].trim() !== "") {
             var rawExtras = row['Extra Markers'].split(';'); 
             rawExtras.forEach(function(item) {
                 var parts = item.split('|'); 
                 
                 if (parts.length >= 2) {
-                    var exLat = parseFloat(parts[0].trim().replace(',', '.'));
-                    var exLon = parseFloat(parts[1].trim().replace(',', '.'));
+                    var latOriginal = parseFloat(parts[0].trim().replace(',', '.'));
+                    var lonOriginal = parseFloat(parts[1].trim().replace(',', '.'));
                     
-                    var iconToUse = (typeof tedIcon !== 'undefined') ? tedIcon : ((typeof lageambIcon !== 'undefined') ? lageambIcon : new L.Icon.Default());
+                    var ptPx = map.project([latOriginal, lonOriginal], chapterZoom);
+                    var distanciaMinimaPx = 30; 
+                    var sobreposto = true;
+                    var angulo = 0;
+                    var raioOffsetPx = 10; 
+                    var tentativas = 0;
 
+                    while (sobreposto && tentativas < 20) {
+                        sobreposto = false;
+                        for (var j = 0; j < posicoesOcupadasPx.length; j++) {
+                            var ocupado = posicoesOcupadasPx[j];
+                            var dx = ptPx.x - ocupado.x;
+                            var dy = ptPx.y - ocupado.y;
+                            var distPx = Math.sqrt(dx * dx + dy * dy);
+
+                            if (distPx < distanciaMinimaPx) {
+                                sobreposto = true;
+                                ptPx.x += Math.cos(angulo) * raioOffsetPx;
+                                ptPx.y += Math.sin(angulo) * raioOffsetPx;
+                                angulo += Math.PI / 4; 
+                                tentativas++;
+                                break; 
+                            }
+                        }
+                    }
+                    
+                    posicoesOcupadasPx.push({x: ptPx.x, y: ptPx.y});
+                    var latLngAfastado = map.unproject(ptPx, chapterZoom);
+
+                    var iconToUse = (typeof tedIcon !== 'undefined') ? tedIcon : ((typeof lageambIcon !== 'undefined') ? lageambIcon : new L.Icon.Default());
                     if (parts.length >= 4) {
                         var iconFile = parts[3].trim();
                         if (iconFile !== "") {
@@ -356,7 +405,12 @@ function initStoryMap(data) {
                         }
                     }
                     
-                    var extraMarker = L.marker([exLat, exLon], { icon: iconToUse, opacity: 1 });
+                    var extraMarker = L.marker([latLngAfastado.lat, latLngAfastado.lng], { icon: iconToUse, opacity: 1 });
+                    
+                    extraMarker.originalLatLng = L.latLng(latOriginal, lonOriginal);
+                    extraMarker.offsetLatLng = latLngAfastado;
+                    extraMarker.zoomBase = chapterZoom;
+
                     chapterExtras.push(extraMarker);
                 }
             });
@@ -454,8 +508,8 @@ function initStoryMap(data) {
         if (row['Media Link']) {
             var mediaLinks = row['Media Link'].split(';').map(m => m.trim()).filter(m => m !== "");
             
-            var audioLinks = mediaLinks.filter(m => m.toLowerCase().match(/\.(mp3|wav|ogg)$/));
-            var visualLinks = mediaLinks.filter(m => !m.toLowerCase().match(/\.(mp3|wav|ogg)$/));
+            var audioLinks = mediaLinks.filter(m => m.toLowerCase().match(/\.(mp3|wav|ogg|m4a|aac)$/));
+            var visualLinks = mediaLinks.filter(m => !m.toLowerCase().match(/\.(mp3|wav|ogg|m4a|aac)$/));
 
             var mediaHTML = "";
             var carouselId = 'carousel-' + i; 
@@ -480,7 +534,7 @@ function initStoryMap(data) {
                     mediaHTML += `<div class="video-container" style="max-width: 100%;"><iframe src="${embedUrl}" frameborder="0" allowfullscreen></iframe></div>`;
                 } 
                 else if (mLower.endsWith('.mp4') || mLower.endsWith('.webm') || mLower.endsWith('.mov')) {
-                    mediaHTML += `<div class="video-container" style="padding-bottom: 0; height: auto; max-width: 100%;"><video controls style="width: 100%; border-radius: 5px;"><source src="${m}" type="video/mp4"></video></div>`;
+                    mediaHTML += `<div class="video-container" style="padding-bottom: 0; height: auto; max-width: 100%;"><video controls controlsList="nodownload" style="width: 100%; border-radius: 5px;"><source src="${m}" type="video/mp4"></video></div>`;
                 } 
                 else {
                     mediaHTML += `<img src="${m}" alt="Mídia do Capítulo" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 5px;">`;
@@ -499,12 +553,12 @@ function initStoryMap(data) {
             }
 
             audioLinks.forEach(m => {
-                mediaHTML += `<div style="margin: 8px 0;"><audio controls style="width: 100%;"><source src="${m}" type="audio/mpeg"></audio></div>`;
+                mediaHTML += `<div style="margin: 0; text-align: center;"><audio controls controlsList="nodownload"><source src="${m}" type="audio/mpeg"></audio></div>`;
             });
 
             if (row['Media Credit']) {
                 mediaHTML += `<p class="caption">${row['Media Credit']}</p>`;
-            }
+            } 
 
             content.innerHTML += mediaHTML;
         }
@@ -516,22 +570,6 @@ function initStoryMap(data) {
             id: chapterId, index: i, location: [lat, lon], zoom: zoomLevel, isHeader: false, extraMarkersData: chapterExtras 
         });
     });
-
-    // RODAPÉ
-    /*var footerVideoId = 'footer-video-step';
-    var footerVideoDiv = document.createElement('div');
-    footerVideoDiv.setAttribute('id', footerVideoId);
-    footerVideoDiv.classList.add('step'); 
-    
-    footerVideoDiv.innerHTML = `
-        <video id="video-final-full" preload="auto" playsinline autoplay muted loop style="width: 100%; height: 100vh; object-fit: cover;">
-            <source src="https://static.videezy.com/system/resources/previews/000/015/506/original/Viaduct_Slovakia_1.mp4" type="video/mp4">
-        </video>
-        <div class="header-content"></div>
-
-    `;
-    storyContainer.appendChild(footerVideoDiv);
-    chapters.push({ id: footerVideoId, index: -2, isFooter: true, extraMarkersData: [] });*/
 
     // LIGHTBOX
     $('body').append('<div id="lightbox"><span id="lightbox-close">&times;</span><div id="lightbox-content"></div></div>');
@@ -647,7 +685,13 @@ function initStoryMap(data) {
                     var loadedGeojsonsCount = 0;
                     var totalGeojsons = currentLayers.filter(l => l.type === 'geojson').length;
 
+                    if (totalGeojsons === 0 && window.mapLegend) {
+                        map.removeControl(window.mapLegend);
+                        window.mapLegend = null;
+                    }
+
                     currentLayers.forEach(function(currentOverlay) {
+
                         var prepareLayer = function() {
                             if (currentOverlay.type === 'wms') {
                             } 
@@ -816,7 +860,7 @@ function initStoryMap(data) {
                                 } else {
                                     if(currentChapterIndex === idx && showLayers) {
                                         loadedGeojsonsCount++;
-                                        if (loadedGeojsonsCount === totalGeojsons && !window.mapLegend) {
+                                        if (loadedGeojsonsCount === totalGeojsons) {
                                             updateCombinedLegend(idx);
                                         }
                                     }
