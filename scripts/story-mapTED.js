@@ -978,19 +978,19 @@ function initStoryMap(data) {
     });
 }
 
-$(document).ready(function() {
-    if (typeof googleDocURL !== 'undefined' && googleDocURL && typeof googleApiKey !== 'undefined' && googleApiKey) {
-        var spreadsheetId = googleDocURL.split('/d/')[1].split('/')[0];
-        $.ajax({
-            url: `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Chapters?key=${googleApiKey}`,
-            dataType: 'json',
-            success: function(response) { initStoryMap(parseGoogleSheetData(response.values)); },
-            error: function(e) { console.error("Erro API:", e); $('#loader').html("Erro ao carregar."); }
-        });
-    } else { alert('Configure google-doc-url.js'); }
-});
+    $(document).ready(function() {
+        if (typeof googleDocURL !== 'undefined' && googleDocURL && typeof googleApiKey !== 'undefined' && googleApiKey) {
+            var spreadsheetId = googleDocURL.split('/d/')[1].split('/')[0];
+            $.ajax({
+                url: `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Chapters?key=${googleApiKey}`,
+                dataType: 'json',
+                success: function(response) { initStoryMap(parseGoogleSheetData(response.values)); },
+                error: function(e) { console.error("Erro API:", e); $('#loader').html("Erro ao carregar."); }
+            });
+        } else { alert('Configure google-doc-url.js'); }
+    });
 
-window.mudaSlide = function(carouselId, direcao) {
+    window.mudaSlide = function(carouselId, direcao) {
     var container = document.getElementById(carouselId);
     if (!container) return;
     

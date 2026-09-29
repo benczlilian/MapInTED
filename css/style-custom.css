@@ -719,3 +719,38 @@ body {
     transform: translateY(-2px); 
     text-decoration: none;
 }
+/* --- FOOTER --- */
+#social-footer {
+    position: fixed;
+    bottom: -80px;  
+    left: 0;
+    width: 100%;
+    background-color: var(--ted-greendark);
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    z-index: 10000;
+    transition: bottom 0.5s ease-in-out;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+    pointer-events: auto !important;
+}
+
+#social-footer.visible {
+    bottom: 0 !important;
+}
+
+.social-link {
+    color: var(--ted-base);
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.social-link:hover {
+    color: #ffffff;
+    transform: scale(1.05);
+}
