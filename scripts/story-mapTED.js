@@ -337,6 +337,13 @@ function initStoryMap(data) {
 
             marker = L.marker([lat, lon], { icon: customIcon, opacity: 1 });
             marker.addTo(map); 
+            
+            marker.on('click', function() {
+                var chapterElement = document.getElementById('chapter-' + i);
+                if (chapterElement) {
+                    chapterElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
         }
 
         markers[i] = marker;
@@ -651,13 +658,38 @@ function initStoryMap(data) {
 
                 markers.forEach((m, i) => {
                     if (m) {
-                        if (i === activeMarkerIdx) { 
+                        if (i > activeMarkerIdx) {
+                            if (map.hasLayer(m)) {
+                                map.removeLayer(m);
+                            }
+                        } else {
                             if (!map.hasLayer(m)) {
                                 m.addTo(map);
                             }
-                        } else { 
-                            if (map.hasLayer(m)) {
-                                map.removeLayer(m);
+                            
+                            const aplicarEfeitos = () => {
+                                var el = m.getElement();
+                                if (el) {
+                                    el.style.transition = "opacity 0.5s ease, filter 0.5s ease";
+                                    
+                                    if (i === activeMarkerIdx) {
+                                        m.setOpacity(1); 
+                                        el.style.filter = "grayscale(0%)";
+                                        m.setZIndexOffset(1000); 
+                                    } else if (i < activeMarkerIdx) {
+                                        m.setOpacity(0.35); 
+                                        el.style.filter = "grayscale(100%)";
+                                        m.setZIndexOffset(0); 
+                                    }
+                                }
+                            };
+
+                            if (m.getElement()) {
+                                aplicarEfeitos();
+                            } else {
+                                m.once('add', function() {
+                                    setTimeout(aplicarEfeitos, 10);
+                                });
                             }
                         }
                     }
