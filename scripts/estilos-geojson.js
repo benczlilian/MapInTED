@@ -1,10 +1,10 @@
 var geojsonConfigs = {
     "decadas": {
         cores: {
-            "1980 - 1989": "#e5dfd1",
-            "1990 - 1999": "#b8a275",
-            "2000 - 2009": "#8a7447",
-            "2010 - 2019": "#594b2e"
+            "1980 - 1989": "#FFF5C8",
+            "1990 - 1999": "#BFB793",
+            "2000 - 2009": "#807543",
+            "2010 - 2019": "#403711"
         },
         corBorda: "#603b00",
         pesoBorda: 0.6,
@@ -12,12 +12,12 @@ var geojsonConfigs = {
     },
     "andares": {
         cores: {
-            "1º Andar": "#926400",
-            "2º Andar": "#783000",
-            "3º Andar": "#9e0005"
+            "1º Andar": "#E5C154",
+            "2º Andar": "#C54E45",
+            "3º Andar": "#32606E"
         },
-        opacidadePreenchimento: 0.3, 
-        opacidadeBorda: 0.5,         
+        opacidadePreenchimento: 0.4,
+        opacidadeBorda: 0.6, 
         //pesoBorda: 2,
         atributosTooltip: ["andar"]
     },
@@ -28,7 +28,8 @@ var geojsonConfigs = {
     "irenoalves": {
         cores: { "NOME_PA": "#e5ede1"}, 
         opacidadePreenchimento: 0.3,
-        atributosTooltip: ["NOME_PA"]
+        atributosTooltip: ["NOME_PA"],
+        pesoBorda: 3,
     },
 
 
@@ -36,7 +37,8 @@ var geojsonConfigs = {
     "perimetro": {
         cores: { "Fazenda Chapadão": "#ebebeb"},
         corBorda: "#333333",
-        atributosTooltip: ["PA"]
+        atributosTooltip: ["PA"],
+        opacidadePreenchimento:0.0
     },
     "estradas": {
         cores: {"Estrada": "#c43c39"},
@@ -54,7 +56,8 @@ var geojsonConfigs = {
             "Reserva Legal": "#4daf4a"
         },
         corBorda: "#333333",
-        atributosTooltip: ["nome_pa","TIPOB"]
+        atributosTooltip: ["nome_pa","TIPOB"],
+        opacidadePreenchimento:0.3
     },
     "rios": {
         cores:{"Hidrografia":"#6498d2"}, 

@@ -64,8 +64,15 @@ function initStoryMap(data) {
     }
 
     L.maplibreGL({
-        style: 'https://api.maptiler.com/maps/019dd5eb-2677-7312-8187-e1eec3206e2a/style.json?key=mJszyGhKhVRJv3iG1dvu',
+        style: 'https://api.maptiler.com/maps/01a0f33a-085b-7cf2-872d-0d28fd9e4d04/style.json?key=mJszyGhKhVRJv3iG1dvu',
         attribution: '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e'
+    }).addTo(map);
+
+    L.tileLayer('https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.png?key=mJszyGhKhVRJv3iG1dvu', {
+        opacity: 0.3,
+        maxZoom: 18,
+        
+        
     }).addTo(map);
 
     extraMarkersGroup = L.layerGroup().addTo(map);
@@ -976,6 +983,9 @@ function initStoryMap(data) {
             scroller.resize();
         }
     });
+
+
+
 }
 
     $(document).ready(function() {
