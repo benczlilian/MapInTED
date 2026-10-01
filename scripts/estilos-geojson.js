@@ -22,7 +22,7 @@ var geojsonConfigs = {
         atributosTooltip: ["andar"]
     },
     "parana": {
-        pesoBorda: 8
+        pesoBorda: 3
     },
 
     "irenoalves": {
@@ -38,7 +38,7 @@ var geojsonConfigs = {
         cores: { "Fazenda Chapadão": "#ebebeb"},
         corBorda: "#333333",
         atributosTooltip: ["PA"],
-        opacidadePreenchimento:0.0
+        opacidadePreenchimento:0.3
     },
     "estradas": {
         cores: {"Estrada": "#c43c39"},
@@ -63,8 +63,33 @@ var geojsonConfigs = {
         cores:{"Hidrografia":"#6498d2"}, 
         atributosTooltip: ["nome_pa","tipo"]
     },
+    "geodesia_geral": {
+        cores: {
+            "Geodésia": "#AB5A02"
+        },
+        corBorda: "#E8CBAF",
+        atributosTooltip: ["nome"],
+        opacidadePreenchimento:0.5
+    },
 
     //---------------------------------------
 
+    "so_geral": {
+        cores: {
+            "Supervisão Ocupacional": "#AB961B"
+        },
+        corBorda: "#D4C679",
+        atributosTooltip: ["nome"],
+        opacidadePreenchimento:0.5
+    },
+
+        "ambiental_geral": {
+        cores: {
+            "Ambiental": "#20C943"
+        },
+        corBorda: "#5CBF70",
+        atributosTooltip: ["nome"],
+        opacidadePreenchimento:0.5
+    },
 
 };

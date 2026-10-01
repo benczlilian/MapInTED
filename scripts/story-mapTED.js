@@ -548,8 +548,8 @@ function initStoryMap(data) {
                     mediaHTML += `<div class="video-container" style="max-width: 100%;"><iframe src="${embedUrl}" frameborder="0" allowfullscreen></iframe></div>`;
                 } 
                 else if (mLower.endsWith('.mp4') || mLower.endsWith('.webm') || mLower.endsWith('.mov')) {
-                    mediaHTML += `<div class="video-container" style="padding-bottom: 0; height: auto; max-width: 100%;"><video controls controlsList="nodownload" style="width: 100%; border-radius: 5px;"><source src="${m}" type="video/mp4"></video></div>`;
-                } 
+                    mediaHTML += `<div class="video-container" style="padding-bottom: 0; height: auto; max-width: 100%;"><video controls controlsList="nodownload" autoplay muted loop playsinline style="width: 100%; border-radius: 5px;"><source src="${m}" type="video/mp4"></video></div>`;
+                }
                 else {
                     mediaHTML += `<img src="${m}" alt="Mídia do Capítulo" style="width: 100%; max-height: 400px; object-fit: contain; border-radius: 5px;">`;
                 }
