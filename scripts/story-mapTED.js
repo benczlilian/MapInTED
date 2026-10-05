@@ -70,7 +70,7 @@ function initStoryMap(data) {
 
     L.tileLayer('https://api.maptiler.com/tiles/hillshade/{z}/{x}/{y}.png?key=mJszyGhKhVRJv3iG1dvu', {
         opacity: 0.3,
-        maxZoom: 18,
+        maxZoom: 20,
         
         
     }).addTo(map);
@@ -222,7 +222,7 @@ function initStoryMap(data) {
             var isPoint = geomType === 'Point' || geomType === 'MultiPoint';
 
             function getLegendIconStyle(cor, isHidden, opacidade, config) {
-                var bgCor = isHidden ? '#e5ede1' : cor;
+                var bgCor = isHidden ? '#F7FFE8' : cor;
                 
                 var baseBorda = (config && config.corBorda !== undefined) ? config.corBorda : cor;
                 var bordaCor = isHidden ? '#5A8832' : baseBorda;
@@ -277,13 +277,17 @@ function initStoryMap(data) {
             }
         });
 
-        if (legendContentHTML !== '') {
+            if (legendContentHTML !== '') {
             window.mapLegend = L.control({position: 'bottomleft'});
             window.mapLegend.onAdd = function (map) {
                 var div = L.DomUtil.create('div', 'info legend');
                 div.style.marginBottom = '80px'; 
                 div.style.marginLeft = '20px';
-                div.innerHTML = legendContentHTML;
+                
+                var cabecalhoLegenda = '<h4>Legenda</h4>' + 
+                                       '<div style="font-size: 11px; color: #5A8832; margin-bottom: 10px; text-align: center; font-style: italic; line-height: 1.2;">(Clique nos itens para filtrar)</div>';
+                
+                div.innerHTML = cabecalhoLegenda + legendContentHTML;
                 return div;
             };
             window.mapLegend.addTo(map);
