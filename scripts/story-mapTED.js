@@ -98,36 +98,12 @@ function initStoryMap(data) {
     controlsDiv.id = 'floating-controls';
     document.body.appendChild(controlsDiv);
 
-    /*var layerBtn = document.createElement('button');
-    layerBtn.className = 'btn-floating btn-layer'; 
-    layerBtn.innerHTML = 'Layers';
-    
-    layerBtn.onclick = function() {
-        showLayers = !showLayers;
-        if (showLayers) {
-            layerBtn.classList.remove('layers-off');
-            layerBtn.innerHTML = 'Layers';
-        } else {
-            layerBtn.classList.add('layers-off');
-            layerBtn.innerHTML = 'Ver layers';
-        }
-        
-        if (currentChapterIndex >= 0 && overlays[currentChapterIndex]) {
-            var currentLayers = overlays[currentChapterIndex]; 
-            currentLayers.forEach(function(layerObj) {
-                if (layerObj && layerObj.layerInstance) {
-                    if (showLayers) {
-                        if (!map.hasLayer(layerObj.layerInstance)) map.addLayer(layerObj.layerInstance);
-                    } else {
-                        if (map.hasLayer(layerObj.layerInstance)) map.removeLayer(layerObj.layerInstance);
-                    }
-                }
-            });
-            if (showLayers) updateCombinedLegend(currentChapterIndex);
-            else if (window.mapLegend) { map.removeControl(window.mapLegend); window.mapLegend = null; }
-        }
-    };
-    controlsDiv.appendChild(layerBtn);*/
+    var helpBtn = document.createElement('button');
+    helpBtn.id = 'btn-help';
+    helpBtn.className = 'btn-floating';
+    helpBtn.innerHTML = '?';
+    helpBtn.title = 'Como navegar';
+    controlsDiv.appendChild(helpBtn);
 
     var toggleBtn = document.getElementById('toggle-mode');
     if (toggleBtn) {
@@ -619,6 +595,44 @@ function initStoryMap(data) {
 
     $('#loader').fadeOut();
 
+    var welcomeModal = document.createElement('div');
+    welcomeModal.id = 'welcome-modal';
+    
+    welcomeModal.innerHTML = `
+        <div class="welcome-content">
+            <h2>Como navegar no mapa</h2>
+            <div class="welcome-instructions">
+                <p><strong> No Computador:</strong> Role a página (scroll) para avançar a história.</p>
+                <p><strong> No Celular:</strong> Deslize a tela para ler. Para explorar o mapa livremente, clique no botão flutuante <strong>"VER MAPA"</strong>.</p>
+                <p><strong> Ocultar História:</strong> Use o botão "Ver Mapa" a qualquer momento para esconder os textos e focar na visualização espacial.</p>
+                <p><strong> Explorar:</strong> Use os botões <strong>+</strong> e <strong>-</strong> (canto superior) para dar zoom e navegue arrastando o mapa.</p>
+                <p><strong> Interação:</strong> Clique nas camadas para mais informações e use a <strong>Legenda</strong> para ligar/desligar dados específicos.</p>
+            </div>
+            <button id="btn-start" class="btn-start-story">Entendi, começar a explorar</button>
+        </div>
+    `;
+    
+    document.body.appendChild(welcomeModal);
+
+    document.getElementById('btn-start').addEventListener('click', function() {
+        welcomeModal.classList.add('hidden');
+    });
+
+    if (helpBtn) {
+        helpBtn.addEventListener('click', function() {
+            welcomeModal.classList.remove('hidden');
+        });
+    }
+
+    var socialFooter = document.createElement('div');
+    socialFooter.id = 'social-footer';
+    socialFooter.innerHTML = `
+    <a href="https://www.instagram.com/ufpr_oficial/" target="_blank"><img src="media/ufprb.png" width="75" height="50" alt="UFPR"></a>
+    <a href="https://www.instagram.com/incra_parana/" target="_blank"><img src="media/incrab.png" width="70" height="50" alt="INCRA Paraná"></a>
+    <a href="https://www.instagram.com/lageamb/" target="_blank"><img src="media/lageamb.png" width="180" height="50" alt="LAGEAMB"></a>
+    `;
+    document.body.appendChild(socialFooter);
+
     scroller = scrollama();
 
     scroller
@@ -629,6 +643,15 @@ function initStoryMap(data) {
 
             $('.step').removeClass('active');
             response.element.classList.add('active');
+
+            var socialFooterEl = document.getElementById('social-footer');
+            if (socialFooterEl) {
+                if (chapter.index === data.length - 1) {
+                    socialFooterEl.classList.add('visible');
+                } else {
+                    socialFooterEl.classList.remove('visible');
+                }
+            }
 
             var currentIsMobile = (window.innerWidth <= 768) || (L.Browser.mobile);
             
