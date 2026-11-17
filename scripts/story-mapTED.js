@@ -319,7 +319,7 @@ function initStoryMap(data) {
                     iconSize: [38, 49],                
                     iconAnchor: [19, 49],              
                 });
-            }
+            } 
 
             marker = L.marker([lat, lon], { icon: customIcon, opacity: 1 });
             marker.addTo(map); 

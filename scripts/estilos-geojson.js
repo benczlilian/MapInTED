@@ -70,7 +70,7 @@ var geojsonConfigs = {
         corBorda: "#E8CBAF",
         atributosTooltip: ["nome"],
         opacidadePreenchimento:0.5
-    },
+    }, 
 
     //---------------------------------------
 
