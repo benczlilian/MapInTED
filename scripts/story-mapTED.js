@@ -130,7 +130,6 @@ function initStoryMap(data) {
         </div> 
         
         <div class="dynamic-scroll-indicator">
-            <p>Role ou deslize<br>para iniciar</p>
             <div class="scroll-animation-group">
                 <div class="mouse-icon">
                     <div class="wheel"></div>
@@ -317,8 +316,8 @@ function initStoryMap(data) {
                 var finalIconUrl = iconNameClean.includes('.') ? iconNameClean : iconNameClean + '.png';
                 customIcon = L.icon({
                     iconUrl: 'media/' + finalIconUrl,
-                    iconSize: [32, 32],                
-                    iconAnchor: [16, 32],              
+                    iconSize: [38, 49],                
+                    iconAnchor: [19, 49],              
                 });
             }
 
